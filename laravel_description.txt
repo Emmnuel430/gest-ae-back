@@ -1,0 +1,89 @@
+-Controllers
+Fichier PHP: app/Http/Controllers/Controller.php
+Fichier PHP: app/Http/Controllers/DashboardController.php
+Fichier PHP: app/Http/Controllers/EtudiantController.php
+Fichier PHP: app/Http/Controllers/GlobalController.php
+Fichier PHP: app/Http/Controllers/LogController.php
+Fichier PHP: app/Http/Controllers/MoniteurController.php
+Fichier PHP: app/Http/Controllers/ProgrammationController.php
+Fichier PHP: app/Http/Controllers/ProgressionController.php
+Fichier PHP: app/Http/Controllers/RappelController.php
+Fichier PHP: app/Http/Controllers/ResultatController.php
+Fichier PHP: app/Http/Controllers/UserController.php
+--
+-Models
+Fichier PHP: app/Models/Etudiant.php
+Fichier PHP: app/Models/Log.php
+Fichier PHP: app/Models/Moniteur.php
+Fichier PHP: app/Models/Programmation.php
+Fichier PHP: app/Models/Progression.php
+Fichier PHP: app/Models/Rappel.php
+Fichier PHP: app/Models/RappelImp.php
+Fichier PHP: app/Models/Resultat.php
+Fichier PHP: app/Models/User.php
+--
+-Migrations
+Fichier PHP: database/migrations/2014_10_12_100000_create_password_resets_table.php
+Fichier PHP: database/migrations/2019_08_19_000000_create_failed_jobs_table.php
+Fichier PHP: database/migrations/2019_12_14_000001_create_personal_access_tokens_table.php
+Fichier PHP: database/migrations/2024_04_18_225637_create_users_table.php
+Fichier PHP: database/migrations/2025_01_13_010513_create_moniteur_table.php
+Fichier PHP: database/migrations/2025_01_13_010536_create_log_table.php
+Fichier PHP: database/migrations/2025_01_16_152026_create_etudiants_table.php
+Fichier PHP: database/migrations/2025_01_16_164958_create_progressions_table.php
+Fichier PHP: database/migrations/2025_01_26_104055_create_avis_table.php
+Fichier PHP: database/migrations/2025_02_08_115247_create_programmations_table.php
+Fichier PHP: database/migrations/2025_03_18_165252_create_rappel_table.php
+Fichier PHP: database/migrations/2025_03_26_220917_create_rappels_imp_table.php
+Fichier PHP: database/migrations/2025_04_18_232834_add_table_concernee_to_logs_table.php
+Fichier PHP: database/migrations/2025_04_25_174325_add_contact_fields_to_moniteurs_table.php
+--
+-Seeders
+Fichier PHP: database/seeders/DatabaseSeeder.php
+Fichier PHP: database/seeders/EtudiantSeeder.php
+Fichier PHP: database/seeders/MoniteurSeeder.php
+Fichier PHP: database/seeders/UserSeeder.php
+--
+-Observers
+Fichier PHP: app/Observers/EtudiantObserver.php
+Fichier PHP: app/Observers/ProgrammationObserver.php
+Fichier PHP: app/Observers/ProgressionObserver.php
+Fichier PHP: app/Observers/ResultatObserver.php
+--
+-Middleware
+Fichier PHP: app/Http/Middleware/Authenticate.php
+Fichier PHP: app/Http/Middleware/EncryptCookies.php
+Fichier PHP: app/Http/Middleware/PreventRequestsDuringMaintenance.php
+Fichier PHP: app/Http/Middleware/RedirectIfAuthenticated.php
+Fichier PHP: app/Http/Middleware/TrimStrings.php
+Fichier PHP: app/Http/Middleware/TrustHosts.php
+Fichier PHP: app/Http/Middleware/TrustProxies.php
+Fichier PHP: app/Http/Middleware/ValidateSignature.php
+Fichier PHP: app/Http/Middleware/VerifyCsrfToken.php
+--
+-Routes
+Fichier PHP: routes/api.php
+Fichier PHP: routes/channels.php
+Fichier PHP: routes/console.php
+Fichier PHP: routes/web.php
+--
+-Views
+Fichier PHP: resources/views/welcome.blade.php
+--
+-Others
+Fichier PHP: app/Console/Commands/GenerateRappels.php
+Fichier PHP: app/Console/Kernel.php
+Fichier PHP: app/Exceptions/Handler.php
+Fichier PHP: app/Http/Kernel.php
+Fichier PHP: app/Providers/AppServiceProvider.php
+Fichier PHP: app/Providers/AuthServiceProvider.php
+Fichier PHP: app/Providers/BroadcastServiceProvider.php
+Fichier PHP: app/Providers/EventServiceProvider.php
+Fichier PHP: app/Providers/RouteServiceProvider.php
+Fichier PHP: database/factories/UserFactory.php
+Fichier PHP: public/index.php
+Fichier PHP: tests/CreatesApplication.php
+Fichier PHP: tests/Feature/ExampleTest.php
+Fichier PHP: tests/TestCase.php
+Fichier PHP: tests/Unit/ExampleTest.php
+--
