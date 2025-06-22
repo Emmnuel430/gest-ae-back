@@ -7,6 +7,7 @@ use Exception;
 use App\Models\Etudiant;
 use App\Models\User;
 use App\Models\Progression;
+use App\Models\RappelImp;
 use App\Models\Log;
 use Illuminate\Http\Request;
 
@@ -151,6 +152,11 @@ class EtudiantController extends Controller
             if (!$userId || !User::find($userId)) {
                 return response()->json(['status' => 'Erreur : ID utilisateur invalide.'], 400);
             }
+
+            // Supprimer tous les rappels liés à cette etudiant
+            RappelImp::where('model_id', $etudiant->id)
+                ->where('model_type', Etudiant::class)
+                ->delete();
 
             // Suppression de la progression associée à l'étudiant
             $progression = Progression::where('idEtudiant', $id)->first();

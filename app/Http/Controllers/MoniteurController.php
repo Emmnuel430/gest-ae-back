@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Moniteur;
 use App\Models\Log;
 use App\Models\User;
+use App\Models\RappelImp;
 
 class MoniteurController extends Controller
 {
@@ -86,6 +87,11 @@ class MoniteurController extends Controller
             if (!$userId || !User::find($userId)) {
                 return response()->json(['status' => 'Erreur : ID utilisateur invalide.'], 400);
             }
+
+            // Supprimer tous les rappels liés à cette moniteur
+            RappelImp::where('model_id', $moniteur->id)
+                ->where('model_type', Moniteur::class)
+                ->delete();
 
             $moniteurInfo = $moniteur->nom . ' ' . $moniteur->prenom . '(ID: ' . $moniteur->id . ')';
 

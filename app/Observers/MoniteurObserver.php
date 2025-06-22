@@ -5,7 +5,6 @@ namespace App\Observers;
 use App\Models\Etudiant;
 use App\Models\Moniteur;
 use App\Models\RappelImp;
-use Illuminate\Support\Facades\Log;
 
 class MoniteurObserver
 {
@@ -15,13 +14,10 @@ class MoniteurObserver
 
         $etudiantsAffectes = Etudiant::where('idMoniteur', '=', $moniteur->id)->with('progression')->get();
 
-        Log::info("Moniteur supprimé : {$moniteur->id}. Étudiants affectés : " . $etudiantsAffectes->count());
-
         foreach ($etudiantsAffectes as $etudiant) {
             $progression = $etudiant->progression;
 
             if ($progression) {
-                Log::info("Étudiant : {$etudiant->id}, étape : {$progression->etape}");
 
                 if (in_array($progression->etape, $etapesCritiques)) {
                     RappelImp::updateOrCreate([
@@ -35,8 +31,6 @@ class MoniteurObserver
                         'priorite' => 'élevée',
                     ]);
                 }
-            } else {
-                Log::warning("Aucune progression trouvée pour l'étudiant {$etudiant->id}");
             }
         }
     }
