@@ -60,24 +60,25 @@ class UserController extends Controller
     // Méthode pour connexion
     function login(Request $req)
     {
-        // Recherche l'utilisateur en fonction du pseudo fourni.
-        $user = User::where('pseudo', $req->pseudo)->first();
+        try {
+            $user = User::where('pseudo', $req->pseudo)->first();
 
-        // Vérifie si l'utilisateur existe et si le mot de passe est correct.
-        if (!$user || !Hash::check($req->password, $user->password)) {
-            return response()->json(['error' => 'Pseudo ou mot de passe incorrect'], 401);
+            if (!$user || !Hash::check($req->password, $user->password)) {
+                return response()->json(['error' => 'Pseudo ou mot de passe incorrect'], 401);
+            }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'status' => 'success',
+                'user' => $user,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('Erreur login: ' . $e->getMessage());
+            return response()->json(['error' => 'Erreur serveur'], 500);
         }
-
-        // Création du token
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        // Retourne les informations de l'utilisateur (sans le mot de passe).
-        return response()->json([
-            'status' => 'success',
-            'user' => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ], 200);
 
     }
 
