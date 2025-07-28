@@ -48,7 +48,7 @@ class RappelImp extends Model
         if (
             $this->date_rappel &&
             \Carbon\Carbon::parse($this->date_rappel)->isToday() &&
-            $this->statut == 0
+            $this->statut === 0
         ) {
             $this->update(['statut' => 1]);
         }

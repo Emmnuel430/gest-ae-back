@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Rappel;
-use App\Models\RappelImp;
 use App\Models\Log;
-use App\Models\Etudiant;
-use App\Models\Resultat;
-use App\Models\Programmation;
+use App\Models\RappelImp;
 use App\Models\User;
 
 class RappelController extends Controller
@@ -183,116 +180,6 @@ class RappelController extends Controller
             'status' => 'success',
             'rappels' => $rappels,
         ]);
-    }
-
-    // Générer des rappels
-    public function generateRappels()
-    {
-        // Mettre à jour le statut des rappels si la date est aujourd'hui
-        RappelImp::whereDate('date_rappel', '=', now()->toDateString())
-            ->where('statut', 0)
-            ->update(['statut' => 1]);
-
-        $rappelActifs = RappelImp::where('statut', 0)
-            ->orderBy('created_at', 'desc')
-            ->get(); // Inclure les données utilisateur
-        try {
-            $rappels = [];
-
-            // Rappels pour les paiements
-            $etudiantsNonSoldes = Etudiant::whereColumn('montant_paye', '<', 'scolarite')->get();
-            foreach ($etudiantsNonSoldes as $etudiant) {
-                $rappels[] = RappelImp::updateOrCreate([
-                    'model_id' => $etudiant->id,
-                    'model_type' => Etudiant::class,
-                    'type' => 'paiement',
-                    'statut' => 0,
-                    'titre' => "Paiement en attente pour {$etudiant->nom} {$etudiant->prenom} (ID: {$etudiant->id})",
-                ], [
-                    'description' => "Reste à payer: " . ($etudiant->scolarite - $etudiant->montant_paye) . " FCFA",
-                    'date_rappel' => null,
-                    'priorite' => 'élevée',
-                ]);
-            }
-
-            // Rappels pour les examens
-            $examens = Programmation::where('date_prog', '>', now())->get();
-            foreach ($examens as $examen) {
-                $rappels[] = RappelImp::updateOrCreate([
-                    'model_id' => $examen->id,
-                    'model_type' => Programmation::class,
-                    'type' => 'examen',
-                    'statut' => 0,
-                    'date_rappel' => $examen->date_prog, // Important ici
-                    'titre' => "Examen prévu le {$examen->date_prog}",
-                ], [
-                    'description' => "Un examen est programmé à cette date. Type: {$examen->type}",
-                    'priorite' => 'moyenne',
-                ]);
-            }
-
-            // Rappels pour les inactifs
-            $etudiantsInactifs = Etudiant::where('updated_at', '<', now()->subDays(30))->get();
-            foreach ($etudiantsInactifs as $etudiant) {
-                $rappels[] = RappelImp::updateOrCreate([
-                    'model_id' => $etudiant->id,
-                    'model_type' => Etudiant::class,
-                    'type' => 'inactivité',
-                    'statut' => 0,
-                    'titre' => "Inactivité détectée pour {$etudiant->nom} {$etudiant->prenom} (ID: {$etudiant->id})",
-                ], [
-                    'description' => "Aucune mise à jour des données depuis plus de 30 jours.",
-                    'date_rappel' => null,
-                    'priorite' => 'moyenne',
-                ]);
-            }
-
-            // Rappels pour formation prolongée
-            $etudiantsInscritsLongtemps = Etudiant::whereDate('created_at', '<', now()->subMonths(6))->get();
-            foreach ($etudiantsInscritsLongtemps as $etudiant) {
-                $rappels[] = RappelImp::updateOrCreate([
-                    'model_id' => $etudiant->id,
-                    'model_type' => Etudiant::class,
-                    'type' => 'formation',
-                    'statut' => 0,
-                    'titre' => "Formation prolongée pour {$etudiant->nom} {$etudiant->prenom} (ID: {$etudiant->id})",
-                ], [
-                    'description' => "L'étudiant(e) est inscrit(e) depuis plus de 6 mois sans finaliser sa formation.",
-                    'date_rappel' => null,
-                    'priorite' => 'élevée',
-                ]);
-            }
-
-            // Rappels pour résultats non retirés
-            $resultatsNonRetires = Resultat::where('statut', 0)->get();
-            foreach ($resultatsNonRetires as $resultat) {
-                $rappels[] = RappelImp::updateOrCreate([
-                    'model_id' => $resultat->id,
-                    'model_type' => Resultat::class,
-                    'type' => 'résultat',
-                    'statut' => 0,
-                    'titre' => "Résultat non retiré pour {$resultat->etudiant->nom} {$resultat->etudiant->prenom}",
-                ], [
-                    'description' => "L'étudiant(e) doit récupérer son résultat.",
-                    'date_rappel' => null,
-                    'priorite' => 'moyenne',
-                ]);
-            }
-
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Rappels générés avec succès.',
-                'rappels' => $rappels,
-                'rappelActifs' => $rappelActifs,
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Erreur lors de la génération des rappels.',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
     }
 
     // Récupérer les 5 derniers rappels importants et les 5 derniers rappels

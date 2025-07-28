@@ -193,19 +193,43 @@ class UserController extends Controller
         }
 
         // Enregistrer le nouveau mot de passe si fourni
+        $passwordChanged = false;
         if ($req->has('password') && !empty($req->input('password'))) {
             $user->password = Hash::make($req->input('password'));
+            $passwordChanged = true;
         }
 
         $user->save();
+        $fieldsToIgnore = ['updated_at', 'created_at'];
 
         // Construire les détails des modifications
         $newData = $user->toArray();
         $modifications = [];
-        foreach (array_diff_assoc($newData, $oldData) as $key => $value) {
-            $modifications[] = "{$key}: '{$oldData[$key]}' -> '{$value}'";
+        foreach ($newData as $key => $value) {
+            if (in_array($key, $fieldsToIgnore))
+                continue;
+            if (array_key_exists($key, $oldData) && $oldData[$key] != $value) {
+                // Traduction du champ
+                switch ($key) {
+                    case 'prenom':
+                        $modifications[] = "Prénom modifié";
+                        break;
+                    case 'nom':
+                        $modifications[] = "Nom modifié";
+                        break;
+                    case 'pseudo':
+                        $modifications[] = "Pseudo modifié";
+                        break;
+                    // Ajoute d'autres cas si besoin
+                    default:
+                        $modifications[] = ucfirst($key) . " modifié";
+                }
+            }
         }
-        $modificationsDetails = implode(", ", $modifications);
+
+        if ($passwordChanged) {
+            $modifications[] = "Mot de passe modifié";
+        }
 
         // Enregistrer le log
         if (count($modifications) > 0) {
@@ -218,7 +242,8 @@ class UserController extends Controller
                 'user_doc' => $user_id->created_at,
                 'action' => 'maj',
                 'table_concernee' => 'users',
-                'details' => "Changements effectués (ID: {$user->id}): " . $modificationsDetails,
+                'details' => "Changements effectués sur l'utilisateur (ID: {$user->id}): " . implode(", ", $modifications),
+
                 'created_at' => now(),
             ]);
         }

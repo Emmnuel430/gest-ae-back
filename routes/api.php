@@ -1,5 +1,7 @@
 <?php
 
+use Laravel\Sanctum\PersonalAccessToken;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController; // Importation du contrôleur UserController 
@@ -10,6 +12,8 @@ use App\Http\Controllers\ResultatController; // Importation du contrôleur Resul
 use App\Http\Controllers\ProgrammationController; // Importation du contrôleur ProgrammationController
 use App\Http\Controllers\GlobalController; // Importation du contrôleur GlobalController
 use App\Http\Controllers\RappelController; // Importation du contrôleur RappelController
+use App\Http\Controllers\RappelImpController; // Importation du contrôleur RappelImpController
+use App\Http\Controllers\SettingController; // Importation du contrôleur SettingController
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return response()->json(['user' => $request->user()]);
@@ -20,10 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Lorsque cette route est appelée, elle exécute la fonction 'login' du UserController.
 Route::post('login', [UserController::class, 'login']);
 
+
 Route::middleware('auth:sanctum')->group(function () {
     // Routes protégées par l'authentification Sanctum
-
-
 
     // -----------------------------------------------
     // -------------   Users   ----------------------
@@ -36,7 +39,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // Définit une route POST pour l'endpoint '/logout'.
     // Lorsque cette route est appelée, elle exécute la fonction suivante.
     Route::post('/logout', function (Request $request) {
-        $request->user()->currentAccessToken()->delete();
+        $token = $request->user()->currentAccessToken();
+
+        if ($token instanceof PersonalAccessToken) {
+            $token->delete();
+        }
         return response()->json(['message' => 'Déconnecté avec succès']);
     })->middleware('auth:sanctum');
 
@@ -215,13 +222,27 @@ Route::middleware('auth:sanctum')->group(function () {
     // Lorsque cette route est appelée, elle exécute la fonction 'historiqueRappels' du RappelController.
     Route::get('historique_rappels', [RappelController::class, 'historiqueRappels']);
 
-    // Définit une route GET pour l'endpoint '/generate_rappels'.
-    // Lorsque cette route est appelée, elle exécute la fonction 'generateRappels' du RappelController.
-    Route::get('generate_rappels', [RappelController::class, 'generateRappels']);
-
     // Définit une route GET pour l'endpoint '/rappels_recents'.
     // Lorsque cette route est appelée, elle exécute la fonction 'getRecentRappels' du RappelController.
     Route::get('rappels_recents', [RappelController::class, 'getRecentRappels']);
+
+    // -----------------------------------------------
+    // ----------   Rappels Important   --------------
+    // -----------------------------------------------
+    // Définit une route GET pour l'endpoint '/generate_rappels'.
+    // Lorsque cette route est appelée, elle exécute la fonction 'generateRappels' du RappelImpController.
+    Route::get('generate_rappels', [RappelImpController::class, 'generateRappels']);
+
+    // Définit une route GET pour l'endpoint '/liste_rappels_imp'.
+    // Lorsque cette route est appelée, elle exécute la fonction 'listeRappelsImp' du RappelImpController.
+    Route::get('liste_rappels_imp', [RappelImpController::class, 'listeRappelsImp']);
+
+    // Définit une route GET pour l'endpoint '/scolarite/tarifs'.
+// Lorsque cette route est appelée, elle exécute la fonction 'index' du SettingController.
+    Route::get('/scolarite/tarifs', [SettingController::class, 'index']);
+    // Définit une route POST pour l'endpoint '/settings/tarifs'.
+    // Lorsque cette route est appelée, elle exécute la fonction 'update' du SettingController.
+    Route::post('/settings/tarifs', [SettingController::class, 'update']);
 
 });
 // -----------------------------------------------

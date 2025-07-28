@@ -33,8 +33,8 @@ class EtudiantController extends Controller
             'numPiece' => 'required|string|max:50',
             'scolarite' => 'required|numeric|min:0',
             'motifInscription' => 'required|string|max:255',
-            'categorie' => 'nullable|array', // S'assurer que c'est un tableau
-            'categorie.*' => 'in:A,B,C,D,E,AB,BCDE,ABCDE,CDE', // S'assurer que chaque élément est valide
+            'categorie' => 'nullable|array',
+            'categorie.*' => 'nullable|in:A,B,C,D,E,AB,BCDE,ABCDE,CDE',
             'montant_paye' => 'required|numeric|min:0' // Nouveau champ
 
         ]);

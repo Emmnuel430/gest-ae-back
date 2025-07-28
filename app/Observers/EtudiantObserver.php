@@ -49,6 +49,27 @@ class EtudiantObserver
                 ->where('statut', 0)
                 ->update(['statut' => 1]);
         }
+
+        // 🔹 🔥 Mettre à jour le titre des rappels si nom ou prénom changés
+        $original = $etudiant->getOriginal();
+        if ($original['nom'] !== $etudiant->nom || $original['prenom'] !== $etudiant->prenom) {
+            $shortPrenom = explode(' ', $etudiant->prenom)[0]; // Prend uniquement le 1er prénom
+            $nouveauNom = $etudiant->nom;
+            $nouveauPrefix = "{$nouveauNom} {$shortPrenom}";
+
+            $rappels = RappelImp::where('model_id', $etudiant->id)
+                ->where('model_type', Etudiant::class)
+                ->whereIn('type', ['paiement', 'formation', 'inactivité'])
+                ->get();
+
+            foreach ($rappels as $rappel) {
+                if (str_contains($rappel->titre, '–')) {
+                    [, $reste] = explode('–', $rappel->titre, 2);
+                    $rappel->titre = trim("{$nouveauPrefix} – {$reste}");
+                    $rappel->save();
+                }
+            }
+        }
     }
 
     public function deleted(Etudiant $etudiant)

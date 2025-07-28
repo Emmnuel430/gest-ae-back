@@ -3,12 +3,12 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Controllers\RappelController; // Assure-toi que le contrôleur est importé
+use App\Http\Controllers\RappelImpController; // Assure-toi que le contrôleur est importé
 
 class GenerateRappels extends Command
 {
     protected $signature = 'rappels:generate';
-    protected $description = 'Génère automatiquement les rappels pour les étudiants';
+    protected $description = 'Clôture les anciens rappels et génère les nouveaux.';
 
     public function __construct()
     {
@@ -17,8 +17,14 @@ class GenerateRappels extends Command
 
     public function handle()
     {
-        $controller = new RappelController();
-        $controller->generateRappels(); // Appelle la fonction pour générer les rappels
-        $this->info('Rappels générés avec succès.');
+        $controller = new RappelImpController();
+        // 1️⃣ Clôture des rappels dépassés
+        $nbClosed = $controller->closeOldRappels();
+
+        // 2️⃣ Génération des nouveaux rappels
+        $response = $controller->generateRappels();
+
+        $this->info("Rappels clôturés : $nbClosed");
+        $this->info("Rappels générés avec succès.");
     }
 }

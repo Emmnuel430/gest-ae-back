@@ -17,6 +17,10 @@ return new class extends Migration {
             $table->string('nom', 100);
             $table->string('prenom', 100);
             $table->enum('specialite', ['code', 'conduite']);
+            $table->string('num_telephone')->nullable();
+            $table->string('num_telephone_2')->nullable();
+            $table->string('email')->unique()->nullable();
+            $table->string('commune')->nullable();
             $table->timestamps(); // Pour ajouter les colonnes created_at et updated_ats
         });
     }
