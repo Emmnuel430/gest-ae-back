@@ -16,7 +16,7 @@ class EtudiantSeeder extends Seeder
     {
         $faker = Faker::create('fr_FR');
 
-        foreach (range(1, 10) as $i) {
+        foreach (range(1, 200) as $i) {
             $motif = $faker->randomElement(['permis', 'recyclage']);
 
             if ($motif === 'permis') {

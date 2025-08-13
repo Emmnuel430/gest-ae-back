@@ -22,6 +22,7 @@ class User extends Authenticatable
         'pseudo',
         'password',
         'role',
+        'dev',
     ];
 
     /**
@@ -43,6 +44,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'role' => 'boolean', // Cast du rôle en booléen
+        'dev' => 'boolean',
     ];
 
 }

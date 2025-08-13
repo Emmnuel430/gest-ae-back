@@ -19,8 +19,8 @@ return new class extends Migration {
             $table->string('pseudo')->unique();
             $table->string('password');
             $table->boolean('role')->default(false);
-            $table->rememberToken();
-            // pas de timestamps car désactivés dans le modèle
+            $table->boolean('dev')->default(false);
+            // $table->rememberToken();
             $table->timestamps();
         });
     }

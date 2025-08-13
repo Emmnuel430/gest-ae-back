@@ -25,13 +25,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        $this->call([
-            EtudiantSeeder::class,
-        ]);
+        // $this->call([
+        //     EtudiantSeeder::class,
+        // ]);
 
-        $this->call([
-            MoniteurSeeder::class,
-        ]);
+        // $this->call([
+        //     MoniteurSeeder::class,
+        // ]);
 
     }
 }

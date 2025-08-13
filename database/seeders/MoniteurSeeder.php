@@ -20,7 +20,7 @@ class MoniteurSeeder extends Seeder
         $faker = Faker::create('fr_FR');
 
         // Créer un tableau avec 5 'code' et 3 'conduite'
-        $specialites = array_merge(array_fill(0, 5, 'code'), array_fill(0, 3, 'conduite'));
+        $specialites = array_merge(array_fill(0, 4, 'code'), array_fill(0, 3, 'conduite'));
         shuffle($specialites); // Pour mélanger les spécialités
 
         foreach ($specialites as $specialite) {
